@@ -60,6 +60,5 @@ class AdjacencyList(object):
         Keyword Arguments:
             edge_type {str} -- The edge type to filter adjacents (default: {'default'})
         """
-        # print(self.adjacents)
         return self.adjacents[node][edge_type]
 
