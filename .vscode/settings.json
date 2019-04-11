@@ -1,0 +1,10 @@
+{
+    "python.pythonPath": "/home/jpavlich/anaconda3/bin/python",
+    "python.linting.pylintEnabled": true,
+    "python.linting.pylamaEnabled": false,
+    "python.linting.enabled": true,
+    "python.formatting.provider": "black",
+    "python.linting.flake8Enabled": false,
+    "python.jediPath": "/home/jpavlich/anaconda3/lib/python3.6/site-packages/",
+    "editor.formatOnSave": true
+}
