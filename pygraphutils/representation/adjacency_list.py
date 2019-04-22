@@ -35,6 +35,9 @@ class AdjacencyList(object):
     def get_nodes(self):
         return self.adjacents.keys()
 
+    def __repr__(self):
+        return str(self.adjacents)
+
 
 def from_df(df: pd.DataFrame, node_col=0, adj_cols={1: "default"}) -> AdjacencyList:
     """Creates adjacency list from a Pandas DataFrame
@@ -91,7 +94,6 @@ def from_df(df: pd.DataFrame, node_col=0, adj_cols={1: "default"}) -> AdjacencyL
                 for adj in adjacents[edge_type]:
                     if not adj in adj_list.adjacents:
                         orphans.add(adj)
-    print("orphans", orphans)
     for n in orphans:
         adj_list.add_node(n)
 
@@ -137,9 +139,6 @@ def to_graph(adj_list: AdjacencyList, G=nx.DiGraph()) -> nx.Graph:
     Returns:
         nx.Graph -- The equivalent graph
     """
-    print(adj_list.get_nodes())
-    print("-----")
-    print([node for node, _ in adj_list.adjacents.items()])
     for node, adjacents in adj_list.adjacents.items():
         G.add_node(node)
         for edge_type in adj_list.edge_types:
