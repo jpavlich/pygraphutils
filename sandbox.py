@@ -6,4 +6,6 @@ if __name__ == "__main__":
     adj_list1 = al.from_df(df, adj_cols={1: "default", 4: "def2"})
     df2 = al.to_df(adj_list1)
     print(df2)
-    adj_list2 = al.from_df(df2, adj_cols={1: "default", 4: "def2"})
+
+    df2.to_excel("tmp/out.xlsx")
+
