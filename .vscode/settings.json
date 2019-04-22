@@ -12,5 +12,9 @@
     ],
     "python.unitTest.unittestEnabled": false,
     "python.unitTest.nosetestsEnabled": false,
-    "python.unitTest.pyTestEnabled": true
+    "python.unitTest.pyTestEnabled": true,
+    "files.exclude": {
+        "**/__pycache__": true
+    },
+    "python.jediEnabled": false
 }
