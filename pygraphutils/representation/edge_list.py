@@ -8,7 +8,7 @@ import pandas as pd
 from pygraphutils.util.sheet import get_col_number, is_valid
 
 
-def to_df(G: nx.Graph) -> pd.DataFrame:
+def from_graph(G: nx.Graph) -> pd.DataFrame:
     """Converts a {nx.Graph} to a Pandas DataFrame as an edge list
     
     Arguments:
@@ -45,7 +45,9 @@ def to_df(G: nx.Graph) -> pd.DataFrame:
     return nodes_df, edges_df
 
 
-def from_df(nodes_df: pd.DataFrame, edges_df: pd.DataFrame, G=nx.DiGraph()) -> nx.Graph:
+def to_graph(
+    nodes_df: pd.DataFrame, edges_df: pd.DataFrame, G=nx.DiGraph()
+) -> nx.Graph:
     for _, row in nodes_df.iterrows():
         node = row[nodes_df.columns[0]]
         attrs = row.to_dict()

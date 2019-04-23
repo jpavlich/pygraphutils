@@ -29,6 +29,6 @@ def G(adj_list1):
 
 
 def test_graph_equivalence(G):
-    n_df, e_df = el.to_df(G)
-    G2 = el.from_df(n_df, e_df)
+    n_df, e_df = el.from_graph(G)
+    G2 = el.to_graph(n_df, e_df)
     assert nx.is_isomorphic(G, G2)
