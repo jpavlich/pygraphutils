@@ -3,7 +3,7 @@ import pygraphutils.representation.adjacency_list as al
 import pytest
 from random import randint
 
-MAX_COLS = 20
+MAX_COLS = 10
 MAX_ROWS = 10
 
 
