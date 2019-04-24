@@ -6,7 +6,10 @@ import pygraphutils.util.file as f
 from pathlib import Path
 import shutil
 
-FILENAME = "/aaa/bbb/ccc/ddd.ee"
+PATH = "/aaa/bbb/ccc"
+BASENAME = "ddd"
+EXT = "ee"
+FILENAME = "%s/%s.%s" % (PATH, BASENAME, EXT)
 
 
 @pytest.fixture
@@ -47,11 +50,11 @@ def test_files(base_dir2):
 
 
 def test_basename():
-    assert f.basename(FILENAME) == "ddd"
+    assert f.basename(FILENAME) == BASENAME
 
 
 def test_ext():
-    assert f.ext(FILENAME) == "ee"
+    assert f.ext(FILENAME) == EXT
 
 
 def test_get_filenames(base_dir, test_dirs):

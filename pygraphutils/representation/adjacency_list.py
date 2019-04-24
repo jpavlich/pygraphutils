@@ -33,7 +33,7 @@ class AdjacencyList(object):
         return self.adjacents[node][edge_type]
 
     def get_nodes(self):
-        return self.adjacents.keys()
+        return list(self.adjacents.keys())
 
     def __repr__(self):
         return str(self.adjacents)
