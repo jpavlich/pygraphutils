@@ -127,7 +127,7 @@ def to_df(adj_list: AdjacencyList) -> pd.DataFrame:
     return pd.DataFrame(rows, columns=cols)
 
 
-def to_graph(adj_list: AdjacencyList, G=nx.DiGraph()) -> nx.Graph:
+def to_graph(adj_list: AdjacencyList, G=nx.DiGraph(), reverse_edges=False) -> nx.Graph:
     """Converts an {AdjacencyList} to a {nx.Graph}
     
     Arguments:
@@ -143,6 +143,9 @@ def to_graph(adj_list: AdjacencyList, G=nx.DiGraph()) -> nx.Graph:
         G.add_node(node)
         for edge_type in adj_list.edge_types:
             for adj in adjacents[edge_type]:
-                G.add_edge(node, adj, edge_type=edge_type)
+                if reverse_edges:
+                    G.add_edge(adj, node, edge_type=edge_type)
+                else:
+                    G.add_edge(node, adj, edge_type=edge_type)
 
     return G

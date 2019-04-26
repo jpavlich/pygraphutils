@@ -1,6 +1,8 @@
 import pandas as pd
 from typing import List
 import math
+import pygraphutils.util.file as f
+import os
 
 
 def get_sheets_from_xls(url, sheet_names) -> List[pd.DataFrame]:
@@ -21,9 +23,10 @@ def get_col_number(df, col):
         raise Exception("column %s does not exist" % col)
 
 
-def to_excel(filename, sheet_names, dfs, formats=None, save=True):
-    COL_WIDTH = 40
-    mkdir(os.path.dirname(filename))
+def to_excel(filename, sheet_names, dfs, formats=None, save=True, col_width=40):
+    if not f.mkdir(os.path.dirname(filename)):
+        return None
+
     # https://stackoverflow.com/a/44289401
     import pandas.io.formats.excel
 
@@ -36,15 +39,15 @@ def to_excel(filename, sheet_names, dfs, formats=None, save=True):
             worksheet.autofilter(0, 1, 30000, len(df.columns))
         # worksheet.set_column("B:Z", 32)
         if formats and i < len(formats):
-            for col, f in enumerate(formats[i]):
-                if f:
-                    fmt = writer.book.add_format(f)
-                    worksheet.set_column(col + 1, col + 1, COL_WIDTH, fmt)
+            for col, fmt in enumerate(formats[i]):
+                if fmt:
+                    fmt = writer.book.add_format(fmt)
+                    worksheet.set_column(col + 1, col + 1, col_width, fmt)
                 else:
-                    worksheet.set_column(col + 1, col + 1, COL_WIDTH)
+                    worksheet.set_column(col + 1, col + 1, col_width)
         else:
             for col, _ in enumerate(df.columns):
-                worksheet.set_column(col + 1, col + 1, COL_WIDTH)
+                worksheet.set_column(col + 1, col + 1, col_width)
 
         header_fmt = writer.book.add_format({"text_wrap": True})
         worksheet.set_row(0, 30, header_fmt)
