@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "/home/jpavlich/anaconda3/bin/python",
+    "python.pythonPath": "/home/jpavlich/anaconda3/envs/ds/bin/python",
     "python.linting.pylintEnabled": true,
     "python.linting.pylamaEnabled": false,
     "python.linting.enabled": true,
@@ -7,12 +7,12 @@
     "python.linting.flake8Enabled": false,
     "python.jediPath": "/home/jpavlich/anaconda3/lib/python3.6/site-packages/",
     "editor.formatOnSave": true,
-    "python.unitTest.pyTestArgs": [
+    "python.testing.pyTestArgs": [
         "tests"
     ],
-    "python.unitTest.unittestEnabled": false,
-    "python.unitTest.nosetestsEnabled": false,
-    "python.unitTest.pyTestEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.pyTestEnabled": true,
     "files.exclude": {
         "**/__pycache__": true
     },

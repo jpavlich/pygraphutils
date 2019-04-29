@@ -2,6 +2,7 @@ import uuid
 import pytest
 import pandas as pd
 import pygraphutils.representation.adjacency_list as al
+import networkx as nx
 
 MAX_COLS = 10
 MAX_ROWS = 10
@@ -32,6 +33,32 @@ def G(adj_list_df):
         for d in range(0, 10):
             G.edges[e]["d%d" % d] = str(uuid.uuid1())
     return G
+
+
+@pytest.fixture
+def G_small():
+    G = nx.DiGraph()
+    G.add_edge("a", "b")
+    G.add_edge("a", "c")
+    G.add_edge("b", "c")
+    return G
+
+
+@pytest.fixture
+def dict_small():
+    return {
+        "nodes": [{"id": "a"}, {"id": "b"}, {"id": "c"}],
+        "edges": [
+            {"source": "a", "target": "b", "id": 0},
+            {"source": "a", "target": "c", "id": 1},
+            {"source": "b", "target": "c", "id": 2},
+        ],
+    }
+
+
+@pytest.fixture
+def json_small():
+    return """{"nodes": [{"id": "a"}, {"id": "b"}, {"id": "c"}], "edges": [{"source": "a", "target": "b", "id": 0}, {"source": "a", "target": "c", "id": 1}, {"source": "b", "target": "c", "id": 2}]}"""
 
 
 def cell_name(i, j):

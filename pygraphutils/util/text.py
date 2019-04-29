@@ -2,7 +2,7 @@ import re
 
 
 def standardize_string(s: str):
-    """ Removes duplicate spaces, remove surrounding spaces and converts to lowercase
+    """ Removes duplicate whitespaces, remove surrounding spaces and converts to lowercase
     
     Arguments:
         s {str} -- [description]
@@ -11,6 +11,6 @@ def standardize_string(s: str):
         [type] -- [description]
     """
     if isinstance(s, str):
-        s = re.sub(r"\s+", " ", s)
+        s = re.sub(r"[\s\n\r\t]+", " ", s)
         s = s.strip().lower().title()
     return s
