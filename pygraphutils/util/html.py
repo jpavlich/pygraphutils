@@ -10,20 +10,20 @@ def include_tags_in_html(in_html_str: str, base_path: str = None) -> str:
     def is_absolute(url):
         return bool(urlparse(url).netloc)
 
-    def open_file(url):
+    def open_file(url) -> str:
         if is_absolute(url) and base_path:
-            return urlopen(url)
+            with urlopen(url) as f:
+                return f.read().decode("utf-8")
         else:
             url = "%s/%s" % (base_path, url)
-            return open(url)
+            with open(url) as f:
+                return f.read()
 
     def replace_tag(m):
         out_tag = m.group(1)
         included_file_url = m.group(2)
-
-        with open_file(included_file_url) as included_file:
-            out_str = "<%s>%s" % (out_tag, included_file.read().decode("utf-8"))
-        return out_str
+        included_file_str = open_file(included_file_url)
+        return "<%s>%s" % (out_tag, included_file_str)
 
     script_regex = r'\s+<(script)[^>]*src="([^"]*)"[^>]*>'
     link_regex = r'\s+<(link)[^>]*href="([^"]*)"[^>]*>'

@@ -16,5 +16,5 @@ class GenericJSONEncoder(json.JSONEncoder):
         elif isinstance(obj, Enum):
             return str(obj)
         else:
-            return super(GenericEncoder, self).default(obj)
+            return super(GenericJSONEncoder, self).default(obj)
 

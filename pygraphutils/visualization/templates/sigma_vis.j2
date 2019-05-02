@@ -23,87 +23,13 @@
   </head>
   <body>
     <div id="graph-view"></div>
-    <script type="text/javascript">
-      
-      function defaultNodeRenderer(style) {
-        const graphDraw = this.graphDraw;
-        sigma.canvas.nodes.def = function(node, context, settings) {
-          // console.log(node);
-          if (Object.keys(style).length > 0) {
-            for (let layer in style) {
-              const layer_style = style[layer];
-              const attr_name = layer;
-              if (attr_name in node) {
-                graphDraw.drawNode(
-                  node,
-                  context,
-                  settings,
-                  layer_style[node[attr_name]]
-                );
-              }
-            }
-          } else {
-            graphDraw.drawNode(node, context, settings, {
-              size: 1,
-              color: "blue",
-              shape: "circle"
-            });
-          }
-        };
-      }
-
-      function defaultEdgeRenderer(style) {
-        // console.log(style);
-        const graphDraw = this.graphDraw;
-        sigma.canvas.edges.def = function(edge, source, target, context, settings) {
-          if (Object.keys(style).length > 0) {
-            for (let layer in style) {
-              const layer_style = style[layer];
-              const attr_name = layer;
-              if (attr_name in edge) {
-                graphDraw.drawEdge(
-                  edge,
-                  source,
-                  target,
-                  context,
-                  settings,
-                  layer_style[edge[attr_name]]
-                );
-              }
-            }
-          } else {
-            const s = edge.weight || 1;
-            let c = "gray";
-            if (edge.weight) {
-              c = `rgba(255,0,0,${edge.weight}`;
-            }
-            graphDraw.drawEdge(edge, source, target, context, settings, {
-              size: s,
-              color: c
-            });
-          }
-        };
-      }
-
-
-      function apply_layout(g, layout) {
-        for (let node of g.nodes) {
-          node.x = layout[node.id][0];
-          node.y = layout[node.id][1];
-        }
-      }
-
+    <script>
       g = {{ g }};
       layout = {{ layout }};
-      console.log(layout);
-      apply_layout(g, layout);
-      
-      // Instantiate sigma:
-      s = new sigma({
-        graph: g,
-        container: "graph-view"
-      });
-      console.log(g);
+      style = {{ style }};
     </script>
+    <script type="text/javascript" src="sigma_shape.js"></script>
+    <script type="text/javascript" src="sigma_renderer.js"></script>
+    <script type="text/javascript" src="sigma_vis.js"></script>
   </body>
 </html>
