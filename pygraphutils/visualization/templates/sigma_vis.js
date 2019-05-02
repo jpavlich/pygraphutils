@@ -101,7 +101,7 @@ function updateGraph(graphView, graph, layout, node_style, edge_style) {
       maxNodeSize: 3,
       defaultLabelSize: 12,
 
-      labelThreshold: 10000,
+      labelThreshold: 5,
 
       zoomingRatio: 1.7,
       zoomMin: 0.0001,
@@ -116,5 +116,3 @@ function updateGraph(graphView, graph, layout, node_style, edge_style) {
     }
   });
 }
-
-updateGraph("graph-view", g, layout, {}, {});

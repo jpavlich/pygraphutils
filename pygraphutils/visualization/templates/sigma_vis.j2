@@ -12,24 +12,22 @@
         border-style: solid;
       }
     </style>
-    <script
-      type="text/javascript"
-      src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.1/sigma.min.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.1/plugins/sigma.parsers.json.min.js"
-    ></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.1/sigma.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.1/plugins/sigma.parsers.json.min.js"></script>
+    <script type="text/javascript" src="sigma_shape.js"></script>
+    <script type="text/javascript" src="sigma_renderer.js"></script>
+    <script type="text/javascript" src="sigma_vis.js"></script>
   </head>
   <body>
+
     <div id="graph-view"></div>
     <script>
       g = {{ g }};
       layout = {{ layout }};
       style = {{ style }};
+
+      updateGraph("graph-view", g, layout, {}, {});
+
     </script>
-    <script type="text/javascript" src="sigma_shape.js"></script>
-    <script type="text/javascript" src="sigma_renderer.js"></script>
-    <script type="text/javascript" src="sigma_vis.js"></script>
   </body>
 </html>
