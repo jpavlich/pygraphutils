@@ -41,6 +41,7 @@ function drawText(ctx, text, x, y, color = "black") {
   ctx.fillStyle = color;
   ctx.fillText(text, x, y);
 }
+
 function drawShape(ctx, attr, value, y, style) {
   const size = 5;
   window[style[attr][value].shape](

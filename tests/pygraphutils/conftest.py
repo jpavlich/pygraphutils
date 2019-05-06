@@ -69,21 +69,23 @@ def edge_type_name(i):
     return "edge_type_%d" % i
 
 
-def adj_cols(num_edge_types=4):
+def edge_type_cols(num_edge_types=4):
     ac = {}
     for i in range(1, MAX_COLS, MAX_COLS // num_edge_types):
-        ac[i] = edge_type_name(i)
+        ac[edge_type_name(i)] = (i, i + MAX_COLS // num_edge_types)
     return ac
 
 
 def create_adj_list1(adj_list_df, num_edge_types):
-    adj_list1 = al.from_df(adj_list_df, adj_cols=adj_cols(num_edge_types))
+    adj_list1 = al.from_df(adj_list_df, edge_type_cols=edge_type_cols(num_edge_types))
+    # adj_list_df.to_excel("tmp/adj_list_df.xlsx")
+    # al.to_df(adj_list1).to_excel("tmp/adj_list1.xlsx")
     return adj_list1
 
 
 def create_adj_list2(adj_list1):
     df2 = al.to_df(adj_list1)
-    adj_list2 = al.from_df(df2, adj_cols=adj_list1.adj_cols)
+    adj_list2 = al.from_df(df2, edge_type_cols=adj_list1.edge_type_cols)
     return adj_list2
 
 

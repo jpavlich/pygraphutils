@@ -1,3 +1,57 @@
+function defaultNodeRenderer(style) {
+  sigma.canvas.nodes.def = function(node, context, settings) {
+    // console.log(node);
+    if (Object.keys(style).length > 0) {
+      for (let layer in style) {
+        const layer_style = style[layer];
+        const attr_name = layer;
+        if (attr_name in node) {
+          drawNode(node, context, settings, layer_style[node[attr_name]]);
+        }
+      }
+    } else {
+      drawNode(node, context, settings, {
+        size: 1,
+        color: "blue",
+        shape: "circle"
+      });
+    }
+  };
+}
+
+function defaultEdgeRenderer(style) {
+  // console.log(style);
+  const graphDraw = this.graphDraw;
+  sigma.canvas.edges.def = function(edge, source, target, context, settings) {
+    if (Object.keys(style).length > 0) {
+      for (let layer in style) {
+        const layer_style = style[layer];
+        const attr_name = layer;
+        if (attr_name in edge) {
+          drawEdge(
+            edge,
+            source,
+            target,
+            context,
+            settings,
+            layer_style[edge[attr_name]]
+          );
+        }
+      }
+    } else {
+      const s = edge.weight || 1;
+      let c = "gray";
+      if (edge.weight) {
+        c = `rgba(255,0,0,${edge.weight}`;
+      }
+      drawEdge(edge, source, target, context, settings, {
+        size: s,
+        color: c
+      });
+    }
+  };
+}
+
 // Generic renderer for every node. Specific styles change colors and borders
 function drawNode(node, context, settings, style) {
   const prefix = settings("prefix") || "";
@@ -82,15 +136,6 @@ function drawEdge(edge, source, target, context, settings, style) {
   const sY = source[prefix + "y"];
   const tX = target[prefix + "x"];
   const tY = target[prefix + "y"];
-  const aSize = Math.max(
-    size * 2.5 * style["arrow_size"] || size * 2.5,
-    settings("minArrowSize")
-  );
-  const d = Math.sqrt(Math.pow(tX - sX, 2) + Math.pow(tY - sY, 2));
-  const aX = sX + ((tX - sX) * (d - aSize - tSize)) / d;
-  const aY = sY + ((tY - sY) * (d - aSize - tSize)) / d;
-  const vX = ((tX - sX) * aSize) / d;
-  const vY = ((tY - sY) * aSize) / d;
 
   if (!color) {
     switch (edgeColor) {
@@ -110,6 +155,17 @@ function drawEdge(edge, source, target, context, settings, style) {
   } else if (edge.outHighlighted) {
     color = "rgba(0,128,0,0.5)";
   }
+
+  const aSize = Math.max(
+    5 * size,
+    style["arrow_size"] || 5 * size,
+    settings("minArrowSize")
+  );
+  const d = Math.sqrt(Math.pow(tX - sX, 2) + Math.pow(tY - sY, 2));
+  const aX = sX + ((tX - sX) * (d - aSize - tSize)) / d;
+  const aY = sY + ((tY - sY) * (d - aSize - tSize)) / d;
+  const vX = ((tX - sX) * aSize) / d;
+  const vY = ((tY - sY) * aSize) / d;
 
   context.strokeStyle = color;
   context.lineWidth = size;

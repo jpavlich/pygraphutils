@@ -11,7 +11,7 @@ def get_sheets_from_xls(url, sheet_names) -> List[pd.DataFrame]:
 
 
 def is_valid(value):
-    return isinstance(value, str) or not math.isnan(value)
+    return value and (isinstance(value, str) or not math.isnan(value))
 
 
 def get_col_number(df, col):

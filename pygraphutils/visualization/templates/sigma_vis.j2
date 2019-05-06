@@ -16,17 +16,19 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.1/plugins/sigma.parsers.json.min.js"></script>
     <script type="text/javascript" src="sigma_shape.js"></script>
     <script type="text/javascript" src="sigma_renderer.js"></script>
-    <script type="text/javascript" src="sigma_vis.js"></script>
+    <script type="text/javascript" src="sigma_layout.js"></script>
+    <script type="text/javascript" src="sigma_graph.js"></script>
   </head>
   <body>
 
     <div id="graph-view"></div>
+
     <script>
       g = {{ g }};
       layout = {{ layout }};
-      style = {{ style }};
+      node_style = {{ node_style }};
 
-      updateGraph("graph-view", g, layout, {}, {});
+      updateGraph("graph-view", g, layout, node_style, {});
 
     </script>
   </body>
