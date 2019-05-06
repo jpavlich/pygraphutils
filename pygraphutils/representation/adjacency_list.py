@@ -11,20 +11,20 @@ from pygraphutils.util.sheet import get_col_number, is_valid
 
 class AdjacencyList(object):
     def __init__(self):
-        self.adjacents_by_edge_type = defaultdict(lambda: defaultdict(set))
+        self._adjacents_by_edge_type = defaultdict(lambda: defaultdict(set))
         self.max_cols = 0
         self.edge_type_cols = dict({})
 
     def add_node(self, node):
-        if not node in self.adjacents_by_edge_type:
-            self.adjacents_by_edge_type[node] = defaultdict(set)
+        if not node in self._adjacents_by_edge_type:
+            self._adjacents_by_edge_type[node] = defaultdict(set)
             return True
         else:
             return False
 
     def set_adjacents(self, node, edge_type="default", adjacents=set()):
-        # self.adjacents_by_edge_type[node][edge_type].update(adjacents)
-        self.adjacents_by_edge_type[node][edge_type] = set(adjacents)
+        # self._adjacents_by_edge_type[node][edge_type].update(adjacents)
+        self._adjacents_by_edge_type[node][edge_type] = set(adjacents)
 
     def get_adjacents(self, node, edge_type="default"):
         """Returns adjacent nodes for the given edge_type
@@ -35,16 +35,16 @@ class AdjacencyList(object):
         Keyword Arguments:
             edge_type {str} -- The edge type to filter adjacents (default: {'default'})
         """
-        return self.adjacents_by_edge_type[node][edge_type]
+        return self._adjacents_by_edge_type[node][edge_type]
 
     def get_nodes(self):
-        return list(self.adjacents_by_edge_type.keys())
+        return list(self._adjacents_by_edge_type.keys())
 
     def get_edge_types(self):
         return self.edge_type_cols.keys()
 
     def __repr__(self):
-        return str(self.adjacents_by_edge_type)
+        return str(self._adjacents_by_edge_type)
 
 
 def from_df(
@@ -70,12 +70,6 @@ def from_df(
 
     node_col = get_col_number(df, node_col)
     adj_list.edge_type_cols = edge_type_cols
-    # adj_list.edge_type_slices.update(
-    #     {
-    #         edge_type: slice(*col_range)
-    #         for edge_type, col_range in edge_type_cols.items()
-    #     }
-    # )
 
     for _, row in df.iterrows():
         node = row[df.columns[node_col]]
