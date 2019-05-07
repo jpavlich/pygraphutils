@@ -1,32 +1,41 @@
-function defaultNodeRenderer(style) {
+function defaultNodeRenderer(node_style) {
+  function drawDefaultNode(node, context, settings) {
+    drawNode(node, context, settings, {
+      size: 1,
+      color: "blue",
+      shape: "circle"
+    });
+  }
   sigma.canvas.nodes.def = function(node, context, settings) {
-    // console.log(node);
-    if (Object.keys(style).length > 0) {
-      for (let layer in style) {
-        const layer_style = style[layer];
-        const attr_name = layer;
+    if (node_style._base_style) {
+      drawNode(node, context, settings, node_style._base_style);
+    }
+    style_layers = node_style.style_layers;
+    if (style_layers && Object.keys(style_layers).length > 0) {
+      for (let layer_name in style_layers) {
+        const style_layer = style_layers[layer_name];
+        const attr_name = layer_name;
         if (attr_name in node) {
-          drawNode(node, context, settings, layer_style[node[attr_name]]);
+          attr_value = node[attr_name];
+          drawNode(node, context, settings, style_layer[attr_value]);
         }
       }
     } else {
-      drawNode(node, context, settings, {
-        size: 1,
-        color: "blue",
-        shape: "circle"
-      });
+      drawDefaultNode(node, context, settings);
     }
   };
 }
 
-function defaultEdgeRenderer(style) {
-  // console.log(style);
-  const graphDraw = this.graphDraw;
+function defaultEdgeRenderer(edge_style) {
   sigma.canvas.edges.def = function(edge, source, target, context, settings) {
-    if (Object.keys(style).length > 0) {
-      for (let layer in style) {
-        const layer_style = style[layer];
-        const attr_name = layer;
+    if (edge_style._base_style) {
+      drawEdge(edge, source, target, context, settings, edge_style._base_style);
+    }
+    style_layers = edge_style.style_layers;
+    if (Object.keys(style_layers).length > 0) {
+      for (let layer_name in style_layers) {
+        const style_layer = style_layers[layer_name];
+        const attr_name = layer_name;
         if (attr_name in edge) {
           drawEdge(
             edge,
@@ -34,7 +43,7 @@ function defaultEdgeRenderer(style) {
             target,
             context,
             settings,
-            layer_style[edge[attr_name]]
+            style_layer[edge[attr_name]]
           );
         }
       }
@@ -115,6 +124,10 @@ function drawNode(node, context, settings, style) {
 
 function drawEdge(edge, source, target, context, settings, style) {
   let color = style["color"];
+  let dash = [];
+  if ("dash" in style) {
+    dash = JSON.parse(style["dash"]);
+  }
   const prefix = settings("prefix") || "";
   const edgeColor = style["color"] || settings("edgeColor");
   const defaultNodeColor = settings("defaultNodeColor");
@@ -170,6 +183,7 @@ function drawEdge(edge, source, target, context, settings, style) {
   context.strokeStyle = color;
   context.lineWidth = size;
   context.beginPath();
+  context.setLineDash(dash);
   context.moveTo(sX, sY);
   context.lineTo(aX, aY);
   context.stroke();

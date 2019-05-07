@@ -6,10 +6,10 @@
       }
       #graph-view {
         max-width: 100%;
-        height: 70%;
+        height: 100vh;
         margin: 0px;
         padding: 0px;
-        border-style: solid;
+        
       }
     </style>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.1/sigma.min.js"></script>
@@ -27,8 +27,9 @@
       g = {{ g }};
       layout = {{ layout }};
       node_style = {{ node_style }};
+      edge_style = {{ edge_style }};
 
-      updateGraph("graph-view", g, layout, node_style, {});
+      updateGraph("graph-view", g, layout, node_style, edge_style);
 
     </script>
   </body>

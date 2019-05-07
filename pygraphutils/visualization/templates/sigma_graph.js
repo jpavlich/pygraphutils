@@ -1,6 +1,5 @@
 function updateGraph(graphView, graph, layout, node_style, edge_style) {
   console.log(graph);
-  console.log(layout);
   console.log(node_style);
   console.log(edge_style);
 
@@ -40,7 +39,7 @@ function updateGraph(graphView, graph, layout, node_style, edge_style) {
       maxNodeSize: 2,
       defaultLabelSize: 12,
 
-      labelThreshold: 5,
+      labelThreshold: 4,
 
       zoomingRatio: 1.7,
       zoomMin: 0.0001,
