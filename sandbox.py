@@ -55,7 +55,7 @@ if __name__ == "__main__":
         edge_style=edge_style_json,
     )
 
-    with open("tmp/sec.html", "w") as out_file:
+    with open("tmp/index.html", "w") as out_file:
         out_file.write(
             include_tags_in_html(in_html_str=html_str, base_path=template_path)
         )
