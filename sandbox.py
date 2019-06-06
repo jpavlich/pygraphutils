@@ -32,19 +32,20 @@ if __name__ == "__main__":
     G = al.to_graph(adj_list, reverse_edges=True)
 
     G = nx.convert_node_labels_to_integers(G, label_attribute="label")
-    graph_json = j.from_graph(G)
 
     layout = sfdp(G, a=len(G))
-    layout_json = json.dumps(layout, cls=GenericJSONEncoder)
 
     node_style = s.from_dfs(
         pd.read_excel("test_data/style/topic_node.xlsx", sheet_name=None)
     )
-    node_style_json = json.dumps(node_style, cls=GenericJSONEncoder)
 
     edge_style = s.from_dfs(
         pd.read_excel("test_data/style/topic_edge.xlsx", sheet_name=None)
     )
+
+    graph_json = j.from_graph(G)
+    layout_json = json.dumps(layout, cls=GenericJSONEncoder)
+    node_style_json = json.dumps(node_style, cls=GenericJSONEncoder)
     edge_style_json = json.dumps(edge_style, cls=GenericJSONEncoder)
 
     html_str = apply_template(
