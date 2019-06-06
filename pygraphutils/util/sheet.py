@@ -11,7 +11,11 @@ def get_sheets_from_xls(url, sheet_names) -> List[pd.DataFrame]:
 
 
 def is_valid(value):
-    return value and (isinstance(value, str) or not math.isnan(value))
+    return (
+        value
+        and (isinstance(value, str) or not math.isnan(value))
+        and len(str(value).strip()) > 0
+    )
 
 
 def get_col_number(df, col):
@@ -24,8 +28,7 @@ def get_col_number(df, col):
 
 
 def to_excel(filename, sheet_names, dfs, formats=None, save=True, col_width=40):
-    if not f.mkdir(os.path.dirname(filename)):
-        return None
+    f.mkdir(os.path.dirname(filename))
 
     # https://stackoverflow.com/a/44289401
     import pandas.io.formats.excel

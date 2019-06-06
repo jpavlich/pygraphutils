@@ -4,27 +4,36 @@ from copy import copy
 
 import networkx as nx
 import pandas as pd
+from typing import List
 
 
 from pygraphutils.util.sheet import get_col_number, is_valid
+from pygraphutils.util.text import standardize_string
 
 
 class AdjacencyList(object):
     def __init__(self):
+        self._nodes = defaultdict(dict)
         self._adjacents_by_edge_type = defaultdict(lambda: defaultdict(set))
         self.max_cols = 0
+        self.attr_cols = dict({})
         self.edge_type_cols = dict({})
 
-    def add_node(self, node):
+    def add_node(self, node, **attrs):
+        self._nodes[node].update(attrs)
         if not node in self._adjacents_by_edge_type:
             self._adjacents_by_edge_type[node] = defaultdict(set)
             return True
         else:
             return False
 
-    def set_adjacents(self, node, edge_type="default", adjacents=set()):
+    def set_adjacents(self, node, adjacents, edge_type="default"):
         # self._adjacents_by_edge_type[node][edge_type].update(adjacents)
         self._adjacents_by_edge_type[node][edge_type] = set(adjacents)
+
+    def add_adjacents(self, node, adjacents, edge_type="default"):
+        # self._adjacents_by_edge_type[node][edge_type].update(adjacents)
+        self._adjacents_by_edge_type[node][edge_type].update(adjacents)
 
     def get_adjacents(self, node, edge_type="default"):
         """Returns adjacent nodes for the given edge_type
@@ -38,7 +47,10 @@ class AdjacencyList(object):
         return self._adjacents_by_edge_type[node][edge_type]
 
     def get_nodes(self):
-        return list(self._adjacents_by_edge_type.keys())
+        return list(self._nodes.keys())
+
+    def get_attrs(self, node):
+        return self._nodes[node]
 
     def get_edge_types(self):
         return self.edge_type_cols.keys()
@@ -47,10 +59,24 @@ class AdjacencyList(object):
         return str(self._adjacents_by_edge_type)
 
 
+def from_dfs(
+    dfs: List[pd.DataFrame],
+    node_col=0,
+    attr_cols={"node_type": 1},
+    default_attr_values={"node_type": None},
+    edge_type_cols={"default_edge_type": (2, None)},
+):
+    adj_list = AdjacencyList()
+    for df in dfs:
+        from_df(df, node_col, attr_cols, default_attr_values, edge_type_cols, adj_list)
+    return adj_list
+
+
 def from_df(
     df: pd.DataFrame,
     node_col=0,
-    attr_cols={"default_attr", 1},
+    attr_cols={"node_type": 1},
+    default_attr_values={"node_type": None},
     edge_type_cols={"default_edge_type": (2, None)},
     adj_list=AdjacencyList(),
 ) -> AdjacencyList:
@@ -69,26 +95,41 @@ def from_df(
     """
 
     node_col = get_col_number(df, node_col)
+    adj_list.attr_cols = attr_cols
     adj_list.edge_type_cols = edge_type_cols
 
     for _, row in df.iterrows():
-        node = row[df.columns[node_col]]
+        node = standardize_string(row[df.columns[node_col]])
         if is_valid(node):
-            adj_list.add_node(node)
+            attrs = {}
+            for attr, col in attr_cols.items():
+                if col < len(df.columns) and is_valid(row[df.columns[col]]):
+                    attrs[attr] = row[df.columns[col]]
+                    # print(node, attrs[attr], is_valid(row[df.columns[col]]))
+                else:
+                    attrs[attr] = default_attr_values.get(attr, None)
+                    # print(node, attrs[attr], list(df.columns))
+
+            adj_list.add_node(node, **attrs)
             adj_list.max_cols = max(len(row), adj_list.max_cols)
 
             for edge_type, col_range in adj_list.edge_type_cols.items():
-                adj_list.set_adjacents(
-                    node,
-                    edge_type,
-                    [val for val in row.values[slice(*col_range)] if is_valid(val)],
-                )
+                adjs = [
+                    standardize_string(val)
+                    for val in row.values[slice(*col_range)]
+                    if is_valid(val)
+                ]
+                adj_list.add_adjacents(node, adjs, edge_type)
 
     # Find nodes that are only defined as adjacents
     for node in adj_list.get_nodes():
         for edge_type in adj_list.get_edge_types():
             for adj in adj_list.get_adjacents(node, edge_type):
-                adj_list.add_node(adj)
+                attrs = {
+                    attr: default_attr_values.get(attr, None)
+                    for attr in attr_cols.keys()
+                }
+                adj_list.add_node(adj, **attrs)
 
     return adj_list
 
@@ -107,6 +148,8 @@ def to_df(adj_list: AdjacencyList) -> pd.DataFrame:
     for node in adj_list.get_nodes():
         row = [math.nan] * adj_list.max_cols
         row[0] = node
+        for attr, col in adj_list.attr_cols.items():
+            row[col] = adj_list.get_attrs(node)[attr]
 
         for edge_type, col_range in adj_list.edge_type_cols.items():
             adjs = adj_list.get_adjacents(node, edge_type)
@@ -135,7 +178,7 @@ def to_graph(adj_list: AdjacencyList, G=nx.DiGraph(), reverse_edges=False) -> nx
     """
     # for node, adjacents in adj_list.adjacents_by_edge_type.items():
     for node in adj_list.get_nodes():
-        G.add_node(node)
+        G.add_node(node, **adj_list.get_attrs(node))
         for edge_type in adj_list.get_edge_types():
             for adj in adj_list.get_adjacents(node, edge_type):
                 if reverse_edges:

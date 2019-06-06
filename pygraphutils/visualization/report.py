@@ -7,8 +7,8 @@ import json
 import os
 
 
-def generate_report(G, layout, node_style, edge_style):
-    template_path = f"{os.path.realpath(__file__)}/templates"
+def from_graph(G, layout, node_style, edge_style) -> str:
+    template_path = f"{os.path.dirname(__file__)}/templates"
     apply_template = template_function(template_path=template_path)
 
     graph_json = j.from_graph(G)
@@ -24,7 +24,4 @@ def generate_report(G, layout, node_style, edge_style):
         edge_style=edge_style_json,
     )
 
-    with open("tmp/index.html", "w") as out_file:
-        out_file.write(
-            include_tags_in_html(in_html_str=html_str, base_path=template_path)
-        )
+    return include_tags_in_html(in_html_str=html_str, base_path=template_path)

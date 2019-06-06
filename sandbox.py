@@ -15,9 +15,7 @@ from pygraphutils.util.html import include_tags_in_html
 from pygraphutils.util.serialization import GenericJSONEncoder
 from pygraphutils.util.template import template_function
 from pygraphutils.visualization.layout import sfdp
-
-template_path = "pygraphutils/visualization/templates"
-apply_template = template_function(template_path=template_path)
+import pygraphutils.visualization.report as report
 
 
 if __name__ == "__main__":
@@ -43,20 +41,5 @@ if __name__ == "__main__":
         pd.read_excel("test_data/style/topic_edge.xlsx", sheet_name=None)
     )
 
-    graph_json = j.from_graph(G)
-    layout_json = json.dumps(layout, cls=GenericJSONEncoder)
-    node_style_json = json.dumps(node_style, cls=GenericJSONEncoder)
-    edge_style_json = json.dumps(edge_style, cls=GenericJSONEncoder)
-
-    html_str = apply_template(
-        "sigma_vis.j2",
-        g=graph_json,
-        layout=layout_json,
-        node_style=node_style_json,
-        edge_style=edge_style_json,
-    )
-
     with open("tmp/index.html", "w") as out_file:
-        out_file.write(
-            include_tags_in_html(in_html_str=html_str, base_path=template_path)
-        )
+        out_file.write(report.from_graph(G, layout, node_style, edge_style))
