@@ -39,7 +39,7 @@ function updateGraph(graphView, graph, layout, node_style, edge_style) {
       maxNodeSize: 2,
       defaultLabelSize: 12,
 
-      labelThreshold: 3,
+      labelThreshold: 8,
 
       zoomingRatio: 1.7,
       zoomMin: 0.0001,
