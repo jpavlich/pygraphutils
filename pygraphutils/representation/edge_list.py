@@ -49,15 +49,18 @@ def to_graph(
     nodes_df: pd.DataFrame, edges_df: pd.DataFrame, G=nx.DiGraph()
 ) -> nx.Graph:
     for _, row in nodes_df.iterrows():
-        node = row[nodes_df.columns[0]]
+        node = row["id"]
         attrs = row.to_dict()
         del attrs["id"]
         G.add_node(node, **attrs)
+        # print(node)
 
     for _, row in edges_df.iterrows():
         attrs = row.to_dict()
         del attrs["source"]
         del attrs["target"]
-        G.add_edge(row[edges_df.columns[0]], row[edges_df.columns[1]], **attrs)
-
+        source = row["source"]
+        target = row["target"]
+        G.add_edge(source, target, **attrs)
+        # print(source, target)
     return G

@@ -20,5 +20,6 @@ def sfdp(G: nx.DiGraph, weight_attr=None, **params):
     else:
         coords = sfdp_layout(g)
 
-    nodes = list(G)
+    nodes = list(G.nodes)
+    print(list(coords))
     return {nodes[i]: [pos[0], pos[1]] for i, pos in enumerate(coords)}
